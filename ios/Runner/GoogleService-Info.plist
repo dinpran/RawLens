@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyA9g_x7JSY0vNE_URPXb8igp9q1AE2y3EA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>975238555912</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.dinpran.vidventure.vidventure</string>
+	<key>PROJECT_ID</key>
+	<string>vidventure-483e9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vidventure-483e9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:975238555912:ios:92a2a51cd438853bb7a4bd</string>
+</dict>
+</plist>
