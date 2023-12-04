@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:vidventure/auth/auth_services.dart';
 import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/auth/storage_services.dart';
+import 'package:vidventure/pages/FullScreenImagePage.dart';
 import 'package:vidventure/pages/followers_page.dart';
 import 'package:vidventure/pages/following_page.dart';
 import 'package:vidventure/pages/login_page.dart';
@@ -207,18 +208,28 @@ class _DisplayPageState extends State<DisplayPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of images in each row
-                        crossAxisSpacing:
-                            4.0, // Spacing between each image horizontally
-                        mainAxisSpacing:
-                            4.0, // Spacing between each image vertically
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 4.0,
+                        mainAxisSpacing: 4.0,
                       ),
                       itemCount: _imageUrls.length,
                       itemBuilder: (context, index) {
                         int reversedIndex = _imageUrls.length - 1 - index;
-                        return Image.network(
-                          _imageUrls[reversedIndex],
-                          fit: BoxFit.cover, // Adjust the image's fit as needed
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreenImagePage(
+                                  imageUrl: _imageUrls[reversedIndex],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Image.network(
+                            _imageUrls[reversedIndex],
+                            fit: BoxFit.cover,
+                          ),
                         );
                       },
                     ),

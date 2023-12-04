@@ -93,57 +93,57 @@ class _UserProfilePageState extends State<UserProfilePage> {
       appBar: AppBar(
         title: Text("$username"),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              await _selectanimage();
-              await uploadFle();
-            },
-            child: Icon(Icons.upload),
-            // child: Text("Select an image to Upload"),
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(Colors.white.withOpacity(1)),
-            ),
-          ),
-          Text("Select and image to upload"),
-          _imageUrls == null
-              ? Center(child: CircularProgressIndicator())
-              : Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of images in each row
-                        crossAxisSpacing:
-                            4.0, // Spacing between each image horizontally
-                        mainAxisSpacing:
-                            4.0, // Spacing between each image vertically
-                      ),
-                      itemCount: _imageUrls.length,
-                      itemBuilder: (context, index) {
-                        int reversedIndex = _imageUrls.length - 1 - index;
-                        return Image.network(
-                          _imageUrls[reversedIndex],
-                          fit: BoxFit.cover, // Adjust the image's fit as needed
-                        );
-                      },
-                    ),
-                  ),
-                ),
-          _isAdLoaded
-              ? Container(
-                  height: _bannerAd.size.height.toDouble(),
-                  width: _bannerAd.size.width.toDouble(),
-                  child: AdWidget(ad: _bannerAd),
-                )
-              : SizedBox(),
-          SizedBox(
-            height: 20,
-          )
-        ],
-      ),
+      // body: Column(
+      //   children: [
+      //     ElevatedButton(
+      //       onPressed: () async {
+      //         await _selectanimage();
+      //         await uploadFle();
+      //       },
+      //       child: Icon(Icons.upload),
+      //       // child: Text("Select an image to Upload"),
+      //       style: ButtonStyle(
+      //         backgroundColor:
+      //             MaterialStateProperty.all<Color>(Colors.white.withOpacity(1)),
+      //       ),
+      //     ),
+      //     Text("Select and image to upload"),
+      //     _imageUrls == null
+      //         ? Center(child: CircularProgressIndicator())
+      //         : Expanded(
+      //             child: Padding(
+      //               padding: EdgeInsets.all(8),
+      //               child: GridView.builder(
+      //                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      //                   crossAxisCount: 3, // Number of images in each row
+      //                   crossAxisSpacing:
+      //                       4.0, // Spacing between each image horizontally
+      //                   mainAxisSpacing:
+      //                       4.0, // Spacing between each image vertically
+      //                 ),
+      //                 itemCount: _imageUrls.length,
+      //                 itemBuilder: (context, index) {
+      //                   int reversedIndex = _imageUrls.length - 1 - index;
+      //                   return Image.network(
+      //                     _imageUrls[reversedIndex],
+      //                     fit: BoxFit.cover, // Adjust the image's fit as needed
+      //                   );
+      //                 },
+      //               ),
+      //             ),
+      //           ),
+      //     _isAdLoaded
+      //         ? Container(
+      //             height: _bannerAd.size.height.toDouble(),
+      //             width: _bannerAd.size.width.toDouble(),
+      //             child: AdWidget(ad: _bannerAd),
+      //           )
+      //         : SizedBox(),
+      //     SizedBox(
+      //       height: 20,
+      //     )
+      //   ],
+      // ),
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

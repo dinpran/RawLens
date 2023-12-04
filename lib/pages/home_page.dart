@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +13,7 @@ import 'package:vidventure/auth/auth_services.dart';
 import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/auth/storage_services.dart';
 import 'package:vidventure/helper/helper_function.dart';
+import 'package:vidventure/pages/FullScreenImagePage.dart';
 import 'package:vidventure/pages/followers_page.dart';
 import 'package:vidventure/pages/following_page.dart';
 import 'package:vidventure/pages/getfollowers_page.dart';
@@ -22,14 +25,14 @@ import 'package:vidventure/pages/userprofile_page.dart';
 import 'package:vidventure/widgets/widgets.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  PlatformFile? pickedFile;
+  XFile? pickedFile;
   UploadTask? uploadTask;
   var urlDownload;
   Stream<QuerySnapshot>? images;
@@ -45,7 +48,9 @@ class _HomePageState extends State<HomePage> {
   AuthServices authService = AuthServices();
   late BannerAd _bannerAd;
   bool _isAdLoaded = false;
+  bool canUploadImage = false;
 
+  @override
   void initState() {
     super.initState();
     _loadImages();
@@ -55,6 +60,7 @@ class _HomePageState extends State<HomePage> {
     joinedorNot(FirebaseAuth.instance.currentUser!.uid);
     gettinguserdata();
     _initBannerAd();
+    _startImageUploadNotificationTimer();
   }
 
   Future<void> _loadImages() async {
@@ -129,12 +135,55 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _startImageUploadNotificationTimer() {
+    // Notify user to upload an image suddenly every day
+    Timer.periodic(Duration(days: 1), (timer) {
+      _showImageUploadNotification();
+    });
+  }
+
+  void _showImageUploadNotification() {
+    // Notify user to upload an image suddenly
+    if (mounted && canUploadImage) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Image Upload"),
+            content: Text("It's time to upload an image!"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _redirectToCamera();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _redirectToCamera() async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      setState(() {
+        pickedFile = pickedImage;
+      });
+
+      await uploadFle(); // Corrected method name
+    }
+  }
+
   @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("HomePage"),
+        title: Text("FotoBuddy"),
         centerTitle: true,
         actions: [
           IconButton(
@@ -195,7 +244,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          Text("Select and image to upload"),
+          Text("Capture the Moment: Selfie or Photo"),
           SizedBox(
             height: 15,
           ),
@@ -265,13 +314,16 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () async {
                   await _selectanimage();
-                  await uploadFle();
+                  if (canUploadImage) {
+                    await uploadFle();
+                  }
                 },
-                child: Icon(Icons.upload),
-                // child: Text("Select an image to Upload"),
+                child: Icon(Icons.add_a_photo),
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      Colors.white.withOpacity(1)),
+                      canUploadImage
+                          ? Colors.white.withOpacity(1)
+                          : Colors.red),
                 ),
               ),
             ),
@@ -286,19 +338,28 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of images in each row
-                        crossAxisSpacing:
-                            4.0, // Spacing between each image horizontally
-                        mainAxisSpacing:
-                            4.0, // Spacing between each image vertically
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 4.0,
+                        mainAxisSpacing: 4.0,
                       ),
                       itemCount: _imageUrls.length,
                       itemBuilder: (context, index) {
                         int reversedIndex = _imageUrls.length - 1 - index;
-
-                        return Image.network(
-                          _imageUrls[reversedIndex],
-                          fit: BoxFit.cover, // Adjust the image's fit as needed
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullScreenImagePage(
+                                  imageUrl: _imageUrls[reversedIndex],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Image.network(
+                            _imageUrls[reversedIndex],
+                            fit: BoxFit.cover,
+                          ),
                         );
                       },
                     ),
@@ -426,28 +487,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // ... existing code
+
   Future uploadFle() async {
-    final file = File(pickedFile!.path!);
+    if (pickedFile == null || !canUploadImage) {
+      // Handle the case where no image is selected
+      return;
+    }
+
     String path =
         "users/${FirebaseAuth.instance.currentUser?.uid}/profilepic/${pickedFile!.name}";
 
-    final ref = FirebaseStorage.instance.ref().child(path); //path!
-    uploadTask = ref.putFile(file);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    uploadTask = ref.putFile(File(pickedFile!.path));
 
     final snapshot = await uploadTask!.whenComplete(() {});
     setState(() async {
       urlDownload = await snapshot.ref.getDownloadURL();
     });
-    // var urlDownload = await snapshot.ref.getDownloadURL();
     print("Downloadlink: $urlDownload");
     return Image.network(urlDownload);
   }
 
   Future _selectanimage() async {
-    final result = await FilePicker.platform.pickFiles();
+    final result = await ImagePicker().pickImage(source: ImageSource.camera);
     if (result == null) return;
+
     setState(() {
-      pickedFile = result.files.first;
+      pickedFile = result;
+      canUploadImage = true;
     });
   }
 }
