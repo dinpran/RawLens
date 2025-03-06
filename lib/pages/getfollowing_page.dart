@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/helper/helper_function.dart';
+import 'package:vidventure/pages/discovery_page.dart';
 import 'package:vidventure/pages/display_page.dart';
 import 'package:vidventure/pages/getfollowers_page.dart';
 import 'package:vidventure/pages/home_page.dart';
@@ -56,7 +57,10 @@ class _GetFollowingPageState extends State<GetFollowingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Following'),
+        title: Text(
+          'Following',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
@@ -104,45 +108,65 @@ class _GetFollowingPageState extends State<GetFollowingPage> {
           }
         },
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-            onTap: () {
-              nextScreenReplacement(context, HomePage());
-            },
-            child: Container(
-              child: Icon(Icons.home),
-            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+            left: 16, right: 16, bottom: 16), // Adds spacing
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color
+            borderRadius: BorderRadius.circular(30), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Shadow color
+                blurRadius: 10, // Softness of the shadow
+                spreadRadius: 2, // Shadow spread
+                offset: Offset(0, 4), // Shadow position
+              ),
+            ],
           ),
-          Container(
-            child: Icon(
-              Icons.favorite,
-              color: Colors.red,
-            ),
-          ),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+          padding:
+              const EdgeInsets.symmetric(vertical: 18), // Padding inside navbar
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, HomePage());
+                },
+                child: Icon(Icons.home),
+              ),
+              Icon(Icons.favorite, color: Colors.grey), // Highlighted icon
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowersPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.people),
-              )),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
-                    context,
-                    UserProfilePage(
-                        username: username!,
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
-                child: Icon(Icons.person),
-              ))
-        ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, DiscoveryPage());
+                },
+                child: Icon(Icons.explore),
+              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     nextScreenReplacement(
+              //       context,
+              //       UserProfilePage(
+              //         username: username!,
+              //         uid: FirebaseAuth.instance.currentUser!.uid,
+              //       ),
+              //     );
+              //   },
+              //   child: Icon(Icons.person),
+              // ),
+            ],
+          ),
+        ),
       ),
     );
   }

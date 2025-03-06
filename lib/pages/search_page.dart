@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
   _initBannerAd() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-8996334303873561/6779668050',
+        adUnitId: 'ca-app-pub-8996334303873561/3087234311',
         listener: BannerAdListener(
             onAdLoaded: (ad) {
               setState(() {
@@ -48,7 +48,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search"),
+        title: Text(
+          "Search",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -147,12 +150,25 @@ class _SearchPageState extends State<SearchPage> {
     joinedorNot(groupId);
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      leading: CircleAvatar(
-        radius: 30,
-        backgroundColor: Colors.red,
-        child: Text(
-          userName.substring(0, 1).toUpperCase(),
-          style: const TextStyle(color: Colors.white),
+      leading: Container(
+        width: 60, // Diameter = 2 * radius
+        height: 60,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.shade50,
+              Colors.purple.shade50
+            ], // Light gradient
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            userName.substring(0, 1).toUpperCase(),
+            style: const TextStyle(color: Colors.black, fontSize: 20),
+          ),
         ),
       ),
       title: Text(
@@ -160,52 +176,69 @@ class _SearchPageState extends State<SearchPage> {
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       trailing: InkWell(
-        onTap: () async {
-          await DatabaseServices(uid: FirebaseAuth.instance.currentUser!.uid)
-              .toggleGroupJoin(
-            groupId,
-          );
-          if (isJoined) {
-            setState(() {
-              isJoined = !isJoined;
-            });
-            showSnackBar(context, Colors.green, "Successfully Following");
-            Future.delayed(const Duration(seconds: 2), () {
-              nextScreen(
-                  context, DisplayPage(username: userName, uid: groupId));
-            });
-          } else {
-            setState(() {
-              isJoined = !isJoined;
-            });
-            showSnackBar(context, Colors.red, "Unfollowing");
-          }
-        },
-        child: isJoined
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey,
-                  border: Border.all(color: Colors.white, width: 1),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: const Text(
-                  "Following",
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.red,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child:
-                    const Text("Follow", style: TextStyle(color: Colors.white)),
-              ),
-      ),
+          onTap: () async {
+            await DatabaseServices(uid: FirebaseAuth.instance.currentUser!.uid)
+                .toggleGroupJoin(
+              groupId,
+            );
+            if (isJoined) {
+              setState(() {
+                isJoined = !isJoined;
+              });
+              showSnackBar(context, Colors.green, "Successfully Following");
+              Future.delayed(const Duration(seconds: 2), () {
+                nextScreen(
+                    context, DisplayPage(username: userName, uid: groupId));
+              });
+            } else {
+              setState(() {
+                isJoined = !isJoined;
+              });
+              showSnackBar(context, Colors.red, "Unfollowing");
+            }
+          },
+          child: isJoined
+              ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.blue.shade50,
+                        Colors.purple.shade50
+                      ], // Light gradient
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    border:
+                        Border.all(color: Colors.grey, width: 1), // Grey border
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text(
+                    "Following",
+                    style: TextStyle(
+                        color: Colors.black), // Black text for contrast
+                  ),
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.pink,
+                        Colors.white,
+                      ], // Stronger gradient for "Follow"
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text(
+                    "Follow",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
     );
   }
 }

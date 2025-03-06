@@ -94,11 +94,11 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: Text("Login"))),
                       Text.rich(TextSpan(
-                          text: "Already have an account? ",
+                          text: "Don't Have an Account? ",
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           children: <TextSpan>[
                             TextSpan(
-                                text: "LogIn!",
+                                text: "Register!",
                                 style: TextStyle(
                                     color: Colors.black,
                                     decoration: TextDecoration.underline),

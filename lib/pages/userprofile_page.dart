@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +10,7 @@ import 'package:vidventure/auth/auth_services.dart';
 import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/auth/storage_services.dart';
 import 'package:vidventure/helper/helper_function.dart';
+import 'package:vidventure/pages/discovery_page.dart';
 import 'package:vidventure/pages/followers_page.dart';
 import 'package:vidventure/pages/following_page.dart';
 import 'package:vidventure/pages/getfollowers_page.dart';
@@ -61,7 +61,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   _initBannerAd() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-8996334303873561/6779668050',
+        adUnitId: 'ca-app-pub-8996334303873561/3087234311',
         listener: BannerAdListener(
             onAdLoaded: (ad) {
               setState(() {
@@ -91,7 +91,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("$username"),
+        title: Text(
+          "$username",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       // body: Column(
       //   children: [
@@ -144,46 +147,68 @@ class _UserProfilePageState extends State<UserProfilePage> {
       //     )
       //   ],
       // ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-            onTap: () {
-              nextScreenReplacement(context, HomePage());
-            },
-            child: Container(
-              child: Icon(
-                Icons.home,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+            left: 16, right: 16, bottom: 16), // Adds spacing
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color
+            borderRadius: BorderRadius.circular(30), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Shadow color
+                blurRadius: 10, // Softness of the shadow
+                spreadRadius: 2, // Shadow spread
+                offset: Offset(0, 4), // Shadow position
               ),
-            ),
+            ],
           ),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+          padding:
+              const EdgeInsets.symmetric(vertical: 18), // Padding inside navbar
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, HomePage());
+                },
+                child: Icon(
+                  Icons.home,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowingPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.favorite),
-              )),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowersPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.people),
-              )),
-          Container(
-            child: Icon(
-              Icons.person,
-              color: Colors.red,
-            ),
-          )
-        ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, DiscoveryPage());
+                },
+                child: Icon(Icons.explore),
+              ),
+              Icon(
+                Icons.person,
+                color: Colors.grey,
+              ), // Highlighted icon
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/helper/helper_function.dart';
+import 'package:vidventure/pages/discovery_page.dart';
 import 'package:vidventure/pages/display_page.dart';
 import 'package:vidventure/pages/getfollowing_page.dart';
 import 'package:vidventure/pages/home_page.dart';
@@ -57,7 +58,10 @@ class _GetFollowersPageState extends State<GetFollowersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Followers'),
+        title: Text(
+          'Followers',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: FutureBuilder<List<DocumentSnapshot>>(
@@ -105,45 +109,65 @@ class _GetFollowersPageState extends State<GetFollowersPage> {
           }
         },
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-            onTap: () {
-              nextScreenReplacement(context, HomePage());
-            },
-            child: Container(
-              child: Icon(Icons.home),
-            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+            left: 16, right: 16, bottom: 16), // Adds spacing
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color
+            borderRadius: BorderRadius.circular(30), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Shadow color
+                blurRadius: 10, // Softness of the shadow
+                spreadRadius: 2, // Shadow spread
+                offset: Offset(0, 4), // Shadow position
+              ),
+            ],
           ),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+          padding:
+              const EdgeInsets.symmetric(vertical: 18), // Padding inside navbar
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, HomePage());
+                },
+                child: Icon(Icons.home),
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowingPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.favorite),
-              )),
-          Container(
-            child: Icon(
-              Icons.people,
-              color: Colors.red,
-            ),
+              ),
+              Icon(Icons.people, color: Colors.grey), // Highlighted icon
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, DiscoveryPage());
+                },
+                child: Icon(Icons.explore),
+              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     nextScreenReplacement(
+              //       context,
+              //       UserProfilePage(
+              //         username: username!,
+              //         uid: FirebaseAuth.instance.currentUser!.uid,
+              //       ),
+              //     );
+              //   },
+              //   child: Icon(Icons.person),
+              // ),
+            ],
           ),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
-                    context,
-                    UserProfilePage(
-                        username: username!,
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
-                child: Icon(Icons.person),
-              ))
-        ],
+        ),
       ),
     );
   }

@@ -29,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   _initBannerAd() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-8996334303873561/6779668050',
+        adUnitId: 'ca-app-pub-8996334303873561/3087234311',
         listener: BannerAdListener(
             onAdLoaded: (ad) {
               setState(() {
@@ -54,10 +54,28 @@ class _ProfilePageState extends State<ProfilePage> {
       drawer: Drawer(
         child: ListView(
           children: [
-            Icon(
-              Icons.account_circle,
-              size: 150,
-              color: Colors.grey,
+            Container(
+              width: 150, // Icon width
+              height: 150, // Icon height
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blue.shade50,
+                    Colors.purple.shade50
+                  ], // Apply gradient here
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.account_circle,
+                  size: 100, // Icon size
+                  color:
+                      Colors.white, // Icon color will remain white to stand out
+                ),
+              ),
             ),
             SizedBox(
               height: 15,
@@ -81,7 +99,9 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.group),
               title: Text(
                 "Home",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -92,7 +112,9 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.person),
               title: Text(
                 "Profile",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -104,7 +126,9 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.logout),
               title: Text(
                 "Logout",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -117,34 +141,58 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
-                Icons.account_circle,
-                size: 200,
-                color: Colors.grey[700],
+              Container(
+                width: 200, // Icon width
+                height: 200, // Icon height
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blue.shade50,
+                      Colors.purple.shade50
+                    ], // Apply gradient here
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.account_circle,
+                    size: 100, // Icon size
+                    color: Colors
+                        .white, // Icon color will remain white to stand out
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Full Name",
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     widget.username,
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Email",
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     widget.email,
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
                   ),
                 ],
               ),

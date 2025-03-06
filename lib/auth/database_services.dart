@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,6 +86,30 @@ class DatabaseServices {
         .get();
     return querySnapshot.docs.isNotEmpty;
     /*if(querysnaphot.docs.isNotEmpty){return true}else{false} */
+  }
+
+  Future<List<Map<String, dynamic>>> getDiscoverUsers(
+      String currentUserId) async {
+    QuerySnapshot querySnapshot =
+        await usercollection.where('uid', isNotEqualTo: currentUserId).get();
+
+    List<Map<String, dynamic>> discoverUsers = [];
+
+    for (QueryDocumentSnapshot userSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> userData =
+          userSnapshot.data() as Map<String, dynamic>;
+
+      // Check if the user is not already followed by the current user
+      if (!(await DatabaseServices(uid: currentUserId)
+          .isUserJoined(userData['uid']))) {
+        discoverUsers.add(userData);
+      }
+    }
+
+    // Shuffle the list of users
+    discoverUsers.shuffle(Random());
+
+    return discoverUsers;
   }
 
   Future<int> getFollowingsCount(String userId) async {

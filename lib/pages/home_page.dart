@@ -14,6 +14,7 @@ import 'package:vidventure/auth/database_services.dart';
 import 'package:vidventure/auth/storage_services.dart';
 import 'package:vidventure/helper/helper_function.dart';
 import 'package:vidventure/pages/FullScreenImagePage.dart';
+import 'package:vidventure/pages/discovery_page.dart';
 import 'package:vidventure/pages/followers_page.dart';
 import 'package:vidventure/pages/following_page.dart';
 import 'package:vidventure/pages/getfollowers_page.dart';
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
   _initBannerAd() {
     _bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-8996334303873561/6779668050',
+        adUnitId: 'ca-app-pub-8996334303873561/3087234311',
         listener: BannerAdListener(
             onAdLoaded: (ad) {
               setState(() {
@@ -183,7 +184,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("FotoBuddy"),
+        title: Text(
+          "RawLens",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -293,13 +297,34 @@ class _HomePageState extends State<HomePage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: Colors.red,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.blue.shade50,
+                            Colors.purple.shade50,
+                          ], // Light gradient
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                            offset: Offset(2, 4),
+                          ),
+                        ],
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
                       child: Center(
-                        child: const Text("Follow",
-                            style: TextStyle(color: Colors.white)),
+                        child: Text(
+                          "Follow",
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -320,10 +345,13 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Icon(Icons.add_a_photo),
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      canUploadImage
-                          ? Colors.white.withOpacity(1)
-                          : Colors.red),
+                  backgroundColor: WidgetStateProperty.all<Color>(
+                    canUploadImage
+                        ? Colors.blue
+                            .shade50 // Light blue shade when upload is allowed
+                        : Colors.purple
+                            .shade50, // Light purple shade when upload is not allowed
+                  ),
                 ),
               ),
             ),
@@ -339,8 +367,8 @@ class _HomePageState extends State<HomePage> {
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        crossAxisSpacing: 4.0,
-                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
                       ),
                       itemCount: _imageUrls.length,
                       itemBuilder: (context, index) {
@@ -356,9 +384,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             );
                           },
-                          child: Image.network(
-                            _imageUrls[reversedIndex],
-                            fit: BoxFit.cover,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              _imageUrls[reversedIndex],
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         );
                       },
@@ -380,10 +411,28 @@ class _HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: ListView(
           children: [
-            Icon(
-              Icons.account_circle,
-              size: 150,
-              color: Colors.grey,
+            Container(
+              width: 150, // Icon width
+              height: 150, // Icon height
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blue.shade50,
+                    Colors.purple.shade50
+                  ], // Apply gradient here
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.account_circle,
+                  size: 100, // Icon size
+                  color:
+                      Colors.white, // Icon color will remain white to stand out
+                ),
+              ),
             ),
             SizedBox(
               height: 15,
@@ -391,7 +440,7 @@ class _HomePageState extends State<HomePage> {
             Text(
               username,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
             SizedBox(
               height: 15,
@@ -407,7 +456,9 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.group),
               title: Text(
                 "Home",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -423,7 +474,9 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.person),
               title: Text(
                 "Profile",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -435,54 +488,81 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.logout),
               title: Text(
                 "Logout",
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
           padding: EdgeInsets.symmetric(vertical: 50),
         ),
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            child: Icon(
-              Icons.home,
-              color: Colors.red,
-            ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          bottom: 16,
+        ), // Adds spacing
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white, // Background color
+            borderRadius: BorderRadius.circular(30), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2), // Shadow color
+                blurRadius: 10, // Softness of the shadow
+                spreadRadius: 2, // Shadow spread
+                offset: Offset(0, 4), // Shadow position
+              ),
+            ],
           ),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+          padding:
+              const EdgeInsets.symmetric(vertical: 18), // Padding inside navbar
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(Icons.home, color: Colors.grey),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowingPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.favorite),
-              )),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(
                     context,
                     GetFollowersPage(
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
+                        uid: FirebaseAuth.instance.currentUser!.uid),
+                  );
+                },
                 child: Icon(Icons.people),
-              )),
-          GestureDetector(
-              onTap: () {
-                nextScreenReplacement(
-                    context,
-                    UserProfilePage(
-                        username: username!,
-                        uid: FirebaseAuth.instance.currentUser!.uid));
-              },
-              child: Container(
-                child: Icon(Icons.person),
-              ))
-        ],
+              ),
+              GestureDetector(
+                onTap: () {
+                  nextScreenReplacement(context, DiscoveryPage());
+                },
+                child: Icon(Icons.explore),
+              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     nextScreenReplacement(
+              //       context,
+              //       UserProfilePage(
+              //         username: username!,
+              //         uid: FirebaseAuth.instance.currentUser!.uid,
+              //       ),
+              //     );
+              //   },
+              //   child: Icon(Icons.person),
+              // ),
+            ],
+          ),
+        ),
       ),
     );
   }
